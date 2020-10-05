@@ -1,0 +1,24 @@
+# DEB 10
+
+switch root user
+
+gpg -a --recv-keys 2BF8D9FE074BCDE4; gpg -a --export 2BF8D9FE074BCDE4 | apt-key add -
+
+echo "deb http://fai-project.org/download buster koeln" > /etc/apt/sources.list.d/fai.list
+
+apt-get update
+
+apt-get install fai-quickstart
+
+sed -i -e 's/^#deb/deb/' /etc/fai/apt/sources.list
+
+sed -i -e 's/#LOGUSER/LOGUSER/' /etc/fai/fai.conf
+
+# SETUP DHCP Server - with filename to fai/pxelinux.0
+# and to set next-server and server-name to the name of your install server
+
+invoke-rc.d isc-dhcp-server restart
+
+fai-setup -v
+
+cp -a /usr/share/doc/fai-doc/examples/simple/* /srv/fai/config/
